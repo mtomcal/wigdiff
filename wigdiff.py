@@ -1,6 +1,8 @@
 """
 WigDiff
 
+By: Michael A Tomcal (c) 2014
+
 Comparing the difference in values between two .wig files and outputting a GFF file
 
 """
@@ -18,6 +20,9 @@ def file_loop(diff_fold):
         wig_b = read_file(sys.argv[2])
     except IndexError:
         print """wigdiff.py
+
+By: Michael A Tomcal (c) 2014
+
 Comparing the difference in values between two .wig files and outputting a GFF file
 
 Usage:
