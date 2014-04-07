@@ -8,11 +8,15 @@ Comparing the difference in values between two .wig files and outputting a GFF f
 """
 import sys
 import re
+import os
 
 def read_file(filename):
     with open(filename, 'r') as reader:
         return reader.readlines()
     raise IOError
+
+def get_filename(filename):
+    return os.path.basename(filename).split('.')[0]
 
 def file_loop(diff_fold):
     try:
@@ -44,20 +48,23 @@ def calculate_diff(wig_a, wig_b, diff_fold):
     range_stop = 500
     expr = re.compile(r'chrom\=([\w|\.]+)')
     name = ""
-    for line in range(0, len(wig_a)):
-        match = expr.search(wig_a[line])
-        if match:
-            name = match.group(1)
-            range_start = 1
-            range_stop = 500
-        else:
-            wig_a_value = float(wig_a[line])
-            wig_b_value = float(wig_b[line])
-            diff = wig_a_value - wig_b_value
-            if abs(diff) > diff_fold:
-                print "%s\t%d\t%d\t%f" % (name, range_start, range_stop, diff)
-            range_start += 500
-            range_stop += 500
+    file_a = get_filename(sys.argv[1])
+    file_b = get_filename(sys.argv[2])
+    with open("diff_%s_%s.gff" % (file_a, file_b), 'w') as writer:
+        for line in range(0, len(wig_a)):
+            match = expr.search(wig_a[line])
+            if match:
+                name = match.group(1)
+                range_start = 1
+                range_stop = 500
+            else:
+                wig_a_value = float(wig_a[line])
+                wig_b_value = float(wig_b[line])
+                diff = wig_a_value - wig_b_value
+                if abs(diff) > diff_fold:
+                    writer.write("%s\t%d\t%d\t%f" % (name, range_start, range_stop, diff))
+                range_start += 500
+                range_stop += 500
 
 def main():
     diff_fold = 0.10
