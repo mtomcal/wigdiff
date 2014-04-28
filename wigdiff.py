@@ -50,7 +50,7 @@ def calculate_diff(wig_a, wig_b, diff_fold):
     name = ""
     file_a = get_filename(sys.argv[1])
     file_b = get_filename(sys.argv[2])
-    with open("diff_%s_%s.gff" % (file_a, file_b), 'w') as writer:
+    with open("diff_%s_%s.bed" % (file_a, file_b), 'w') as writer:
         for line in range(0, len(wig_a)):
             match = expr.search(wig_a[line])
             if match:
@@ -62,7 +62,7 @@ def calculate_diff(wig_a, wig_b, diff_fold):
                 wig_b_value = float(wig_b[line])
                 diff = wig_a_value - wig_b_value
                 if abs(diff) > diff_fold:
-                    writer.write("%s\t%d\t%d\t%f" % (name, range_start, range_stop, diff))
+                    writer.write("%s\t%d\t%d\t%f\n" % (name, range_start, range_stop, diff))
                 range_start += 500
                 range_stop += 500
 
